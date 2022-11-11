@@ -41,6 +41,7 @@ def _watch_flow_layout():
         bottom_margin=980,
         line_spacing=88,
         font=get_default_font(74),
+        typo_rate=0.1,
     )
     templates = (template1, template2)
     with open(abs_path("texts/从百草园到三味书屋.txt"), encoding="utf-8") as f:
@@ -66,6 +67,7 @@ def _watch_gird_layout():
         word_spacing_sigma=0.8,
         line_spacing_sigma=1,
         features={Feature.GRID_LAYOUT},
+        typo_rate=0.1,
     )
     with open(abs_path("texts/荷塘月色.txt"), encoding="utf-8") as f:
         text = f.read()

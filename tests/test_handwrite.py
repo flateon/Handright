@@ -109,3 +109,20 @@ def test_page_breaks():
     )
     images = handwrite(text, template)
     assert len(list(images)) == 6
+
+
+def test_typo_rate():
+    text = "哈" * 4
+    template = Template(
+        background=PIL.Image.new(mode="L", size=(30, 30), color="white"),
+        font=get_default_font(12),
+        left_margin=3,
+        right_margin=3,
+        top_margin=3,
+        bottom_margin=3,
+        word_spacing_sigma=0,
+        font_size_sigma=0,
+        typo_rate=1.0,
+    )
+    images = handwrite(text, template)
+    assert len(list(images)) == 2

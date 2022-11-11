@@ -103,6 +103,7 @@ def _draw_page(
     font_size = tpl.get_font().size
     end_chars = tpl.get_end_chars()
     page_breaks = tpl.get_page_breaks()
+    typo_rate = tpl.get_typo_rate()
 
     draw = page.draw()
     y = top_margin + line_spacing - font_size
@@ -123,9 +124,9 @@ def _draw_page(
                     and text[start] not in end_chars):
                 break
             if Feature.GRID_LAYOUT in tpl.get_features():
-                x = _grid_layout(draw, x, y, text[start], tpl, rand)
+                x = _grid_layout(draw, x, y, text[start], tpl, rand, typo_rate)
             else:
-                x = _flow_layout(draw, x, y, text[start], tpl, rand)
+                x = _flow_layout(draw, x, y, text[start], tpl, rand, typo_rate)
             start += 1
             if start == len(text):
                 return start
@@ -134,8 +135,19 @@ def _draw_page(
 
 
 def _flow_layout(
-        draw, x, y, char, tpl: Template, rand: random.Random
+        draw, x, y, char, tpl: Template, rand: random.Random, typo_rate
 ) -> float:
+    if typo_rate is not None and '\u4e00' <= char <= '\u9fa5' and rand.random() < typo_rate:
+        xy = (round(x), round(gauss(rand, y, tpl.get_line_spacing_sigma())))
+        font = _get_font(tpl, rand)
+        offset = _draw_char(draw, char, xy, font)
+        _draw_char(draw, "@", xy, font)
+        x += gauss(
+            rand,
+            tpl.get_word_spacing() + offset,
+            tpl.get_word_spacing_sigma()
+        )
+
     xy = (round(x), round(gauss(rand, y, tpl.get_line_spacing_sigma())))
     font = _get_font(tpl, rand)
     offset = _draw_char(draw, char, xy, font)
@@ -148,8 +160,17 @@ def _flow_layout(
 
 
 def _grid_layout(
-        draw, x, y, char, tpl: Template, rand: random.Random
+        draw, x, y, char, tpl: Template, rand: random.Random, typo_rate
 ) -> float:
+    if typo_rate is not None and '\u4e00' <= char <= '\u9fa5' and rand.random() < typo_rate:
+
+        xy = (round(gauss(rand, x, tpl.get_word_spacing_sigma())),
+              round(gauss(rand, y, tpl.get_line_spacing_sigma())))
+        font = _get_font(tpl, rand)
+        _ = _draw_char(draw, char, xy, font)
+        _draw_char(draw, "@", xy, font)
+        x += tpl.get_word_spacing() + tpl.get_font().size
+
     xy = (round(gauss(rand, x, tpl.get_word_spacing_sigma())),
           round(gauss(rand, y, tpl.get_line_spacing_sigma())))
     font = _get_font(tpl, rand)

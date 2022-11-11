@@ -29,6 +29,7 @@ class Template(object):
         "_word_spacing_sigma",
         "_end_chars",
         "_page_breaks",
+        "_typo_rate",
         "_perturb_x_sigma",
         "_perturb_y_sigma",
         "_perturb_theta_sigma",
@@ -65,6 +66,7 @@ class Template(object):
             word_spacing_sigma: Optional[float] = None,
             end_chars: str = _DEFAULT_END_CHARS,
             page_breaks: str = _DEFAULT_PAGE_BREAKS,
+            typo_rate: Optional[float] = None,
             perturb_x_sigma: Optional[float] = None,
             perturb_y_sigma: Optional[float] = None,
             perturb_theta_sigma: float = _DEFAULT_PERTURB_THETA_SIGMA,
@@ -113,6 +115,7 @@ class Template(object):
         self.set_word_spacing_sigma(word_spacing_sigma)
         self.set_end_chars(end_chars)
         self.set_page_breaks(page_breaks)
+        self.set_typo_rate(typo_rate)
         self.set_perturb_x_sigma(perturb_x_sigma)
         self.set_perturb_y_sigma(perturb_y_sigma)
         self.set_perturb_theta_sigma(perturb_theta_sigma)
@@ -135,6 +138,7 @@ class Template(object):
                 and self._word_spacing_sigma == other._word_spacing_sigma
                 and self._end_chars == other._end_chars
                 and self._page_breaks == other._page_breaks
+                and self._typo_rate == other._typo_rate
                 and self._perturb_x_sigma == other._perturb_x_sigma
                 and self._perturb_y_sigma == other._perturb_y_sigma
                 and self._perturb_theta_sigma == other._perturb_theta_sigma)
@@ -209,6 +213,11 @@ class Template(object):
         else:
             self._word_spacing_sigma = word_spacing_sigma
 
+    def set_typo_rate(
+            self, typo_rate: Optional[float] = None
+    ) -> None:
+        self._typo_rate = typo_rate
+
     def set_end_chars(self, end_chars: str = _DEFAULT_END_CHARS) -> None:
         self._end_chars = end_chars
 
@@ -281,6 +290,9 @@ class Template(object):
     def get_page_breaks(self) -> str:
         return self._page_breaks
 
+    def get_typo_rate(self):
+        return self._typo_rate
+
     def get_perturb_x_sigma(self) -> float:
         return self._perturb_x_sigma
 
@@ -317,6 +329,7 @@ class Template(object):
                 "word_spacing_sigma={self._word_spacing_sigma}, "
                 "end_chars={self._end_chars}, "
                 "page_breaks={self._page_breaks}, "
+                "typo_rate={self._typo_rate}, "
                 "perturb_x_sigma={self._perturb_x_sigma}, "
                 "perturb_y_sigma={self._perturb_y_sigma}, "
                 "perturb_theta_sigma={self._perturb_theta_sigma})"
