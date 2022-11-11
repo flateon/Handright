@@ -92,3 +92,20 @@ def test_line_separators():
             == list(handwrite(text5, template, seed=SEED))
             == list(handwrite(text6, template, seed=SEED))
             == list(handwrite(text7, template, seed=SEED)))
+
+
+def test_page_breaks():
+    text = "哈\f" * 4 + "哈&" * 2
+    template = Template(
+        background=PIL.Image.new(mode="L", size=(30, 30), color="white"),
+        font=get_default_font(12),
+        left_margin=3,
+        right_margin=3,
+        top_margin=3,
+        bottom_margin=3,
+        word_spacing_sigma=0,
+        font_size_sigma=0,
+        page_breaks='\f&',
+    )
+    images = handwrite(text, template)
+    assert len(list(images)) == 6

@@ -102,12 +102,18 @@ def _draw_page(
     line_spacing = tpl.get_line_spacing()
     font_size = tpl.get_font().size
     end_chars = tpl.get_end_chars()
+    page_breaks = tpl.get_page_breaks()
 
     draw = page.draw()
     y = top_margin + line_spacing - font_size
     while y <= height - bottom_margin - font_size:
         x = left_margin
         while True:
+            if text[start] in page_breaks:
+                start += 1
+                if start + 1 <= len(text) and text[start] == _LF:
+                    start += 1
+                return start
             if text[start] == _LF:
                 start += 1
                 if start == len(text):
